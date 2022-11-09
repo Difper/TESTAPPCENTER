@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.betomorrow.appcenter'
 }
 
 android {
@@ -15,8 +16,28 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    flavorDimensions "environment"
+    productFlavors {
+        alpha {
+            dimension "environment"
+            applicationIdSuffix ".alpha"
+            versionNameSuffix "-alpha"
+        }
+        beta {
+            dimension "environment"
+            applicationIdSuffix ".beta"
+            versionNameSuffix "-beta"
+        }
+        prod {
+            dimension "environment"
+        }
+    }
 
     buildTypes {
+        releaseAppcenter {
+            signingConfig android.signingConfigs.release
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -28,6 +49,27 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+}
+
+appcenter {
+    apiToken = "e2352da89ecdb01833d54db118655e8994a848e2"                       // Api Token from AppCenter user profile
+    ownerName = "resul.akin-arafas.com"                          // Owner Name from AppCenter Application (see following note)
+    distributionGroups = ["Beta"]               // Name of the AppCenter Distribution Group
+    releaseNotes = file("../changelog.md")      // Can be a file or text
+    notifyTesters = true                        // Send mail to testers
+    apps {                                      // Here we manage 3 AppCenter applications : alpha, beta and prod
+        alpha {                                 // When dimension is provided, this name match the productFlavor name
+            dimension = "environment"           // This dimension match the flavor dimension
+            appName = "testappcenter"      // The AppCenter application name
+        }
+        beta {
+            dimension = "environment"
+            appName = "testappcenter"
+        }
+        prodRelease {                           // When no dimension is provided, this name match the full variant name
+            appName = "testappcenter"            // Application Name from AppCenter (see following note)
+        }
     }
 }
 
