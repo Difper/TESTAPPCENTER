@@ -34,11 +34,11 @@ android {
     }
 
     buildTypes {
-        releaseAppcenter {
+        release {
             signingConfig android.signingConfigs.release
         }
 
-        release {
+        releaseNormal {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
